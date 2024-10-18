@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: python-server
+          image: python:3.8-slim
+          command: ["python", "-m", "http.server", "8080"]
+          ports:
+            - containerPort: 8080
+
