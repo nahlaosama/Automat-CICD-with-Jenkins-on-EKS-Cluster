@@ -2,12 +2,22 @@ pipeline {
     agent any
     
     environment {
-        // Define Docker Hub credentials
-        DOCKER_HUB_CREDENTIALS = credentials('nahla-id')
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub')
         IMAGE_NAME = 'nahhla0220/nginx'
-        KUBECONFIG = '/path/to/your/kubeconfig'
+        KUBECONFIG = credentials('kubeconfig')
+        NAMESPACE = 'dv'
     }
     
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from the GitHub repository
+                git url: 'https://github.com/nahlaosama/final_project', branch: 'a6ca6c29320f3d13ca6ba6b29451a0c39a96dd07'
+            }
+        }
+
+    }
 
     stages {
         stage('Build') {
@@ -20,6 +30,7 @@ pipeline {
                 }
             }
         }
+    }    
 
         stage('Push') {
             steps {
@@ -33,16 +44,27 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Deploy') {
             steps {
                 script {
-                    // Pull the pushed image from Docker Hub
-                    sh 'docker pull nahhla0220/nginx:v1'
-                    
-                    // Run the container and expose it on port 80
-                    sh 'docker run -d -p 80:80 nahhla0220/nginx:v1'
+                    // Use the kubeconfig stored as a Jenkins credential
+                        // Set KUBECONFIG environment variable for kubectl
+                        sh "export KUBECONFIG=${KUBECONFIG_FILE}"
+
+                        // Apply the Kubernetes deployment and service YAML files
+                        sh """
+                        kubectl apply -f k8s/frontend-deployment.yml -n ${NAMESPACE}
+                        kubectl apply -f k8s/frontend-service.yml    -n ${NAMESPACE}
+                        kubectl apply -f k8s/backend-deployment.yml  -n ${NAMESPACE}
+                        kubectl apply -f k8s/backend-service.yml     -n ${NAMESPACE} 
+                        kubectl apply -f k8s/k8s/daemonset.yaml      -n ${NAMESPACE}
+                        kubectl apply -f k8s/backend-service.yml     -n ${NAMESPACE} 
+                        """
+                    }
                 }
             }
+    
         }
-    }
+   
+        
