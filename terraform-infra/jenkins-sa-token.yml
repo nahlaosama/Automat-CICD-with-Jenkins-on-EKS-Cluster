@@ -1,8 +1,15 @@
 apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins-sa
+  namespace: default
+
+---
+apiVersion: v1
 kind: Secret
 metadata:
   name: jenkins-sa-token
-  namespace: default  
+  namespace: default   
   annotations:
     kubernetes.io/service-account.name: "jenkins-sa"
 type: kubernetes.io/service-account-token

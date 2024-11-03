@@ -3,6 +3,8 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub')
         IMAGE_NAME = 'nahhla0220/nginx'
+        AWS_ACCESS_KEY_ID = credentials('access-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('secret-access-key-id')
         KUBECONFIG = credentials('kubeconfig')
         NAMESPACE = "${env.BRANCH_NAME == 'prod' ? 'prod' : 'dev'}"
     }
@@ -28,7 +30,7 @@ pipeline {
                     
                     // Push the image to Docker Hub
                     sh 'docker push nahhla0220/nginx:v1'
-
+                    
                     // Remove the image after pushing
                     sh 'docker rmi nahhla0220/nginx:v1'
                 }
@@ -40,10 +42,8 @@ pipeline {
                 script {
                     // Use the kubeconfig stored as a Jenkins credential
                         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-
                        
                         // Apply the Kubernetes deployment and service YAML files
-<<<<<<< HEAD
                        sh """
                             kubectl apply -f kubenates/${NAMESPACE}/frontend-deployment.yml -n ${NAMESPACE}
                             kubectl apply -f kubenates/${NAMESPACE}/frontend-service.yml -n ${NAMESPACE}
@@ -51,11 +51,6 @@ pipeline {
                             kubectl apply -f kubenates/${NAMESPACE}/backend-service.yml -n ${NAMESPACE}
                             kubectl apply -f kubenates/${NAMESPACE}/loadbalancer-service.yml -n ${NAMESPACE}
                            """
-=======
-                        sh """
-                          kubectl get namespaces
-                        """
->>>>>>> 56e0482bf85a15984f592e82c07933f7a4c14195
                     }
                 }
             }
