@@ -7,13 +7,7 @@ resource "aws_iam_role" "jenkins_role" {
       {
         Effect    = "Allow"
         Principal = { Service = "ec2.amazonaws.com" }
-        Action    = [
-                "eks:DescribeCluster",
-                "eks:ListClusters",
-                "eks:DescribeNodegroup",
-                "eks:DescribeFargateProfile",
-                "eks:ListNodegroups"
-               ]
+        Action    = "sts:AssumeRole"
       }
     ]
   })
