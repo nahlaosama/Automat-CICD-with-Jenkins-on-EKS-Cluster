@@ -41,7 +41,7 @@ pipeline {
                     // Use the kubeconfig stored as a Jenkins credential
                         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
 
-                          sh "kubectl version --client"
+                       
                         // Apply the Kubernetes deployment and service YAML files
                         sh """
                             kubectl apply -f kubenates/${NAMESPACE}/frontend-deployment.yml -n ${NAMESPACE}
