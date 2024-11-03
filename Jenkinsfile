@@ -29,7 +29,6 @@ pipeline {
                     // Push the image to Docker Hub
                     sh 'docker push nahhla0220/nginx:v1'
 
-                     
                     // Remove the image after pushing
                     sh 'docker rmi nahhla0220/nginx:v1'
                 }
