@@ -1,0 +1,51 @@
+---
+- name: Install Jenkins
+  hosts: all
+  become: true
+  
+  tasks:
+    - name: Update all packages to their latest version
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Ensure Java is installed
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Verify Java installation
+      command: java -version
+      register: java_version
+      ignore_errors: yes
+
+    - name: Display Java version
+      debug:
+        var: java_version.stdout
+
+    - name: Add the Jenkins GPG key
+      get_url:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+        dest: /usr/share/keyrings/jenkins-keyring.asc
+        mode: '0644'
+
+    - name: Add Jenkins repository
+      copy:
+        content: |
+          deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/
+        dest: /etc/apt/sources.list.d/jenkins.list
+
+    - name: Update apt cache after adding Jenkins repo
+      apt:
+        update_cache: yes
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+
+    - name: Start and enable Jenkins service
+      systemd:
+        name: jenkins
+        state: started
+        enabled: true
