@@ -41,14 +41,15 @@ pipeline {
                     // Use the kubeconfig stored as a Jenkins credential
                         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
 
+                       
                         // Apply the Kubernetes deployment and service YAML files
-                        sh """
-                        kubectl apply -f kubenates/${NAMESPACE}/frontend-deployment.yml   -n ${NAMESPACE}
-                        kubectl apply -f kubenates/${NAMESPACE}/frontend-service.yml      -n ${NAMESPACE}
-                        kubectl apply -f kubenates/${NAMESPACE}/backend-deployment.yml    -n ${NAMESPACE}
-                        kubectl apply -f kubenates/${NAMESPACE}/backend-service.yml       -n ${NAMESPACE} 
-                        kubectl apply -f kubenates/${NAMESPACE}/loadbalancer-service.ym   -n ${NAMESPACE} 
-                        """
+                       sh """
+                            kubectl apply -f kubenates/${NAMESPACE}/frontend-deployment.yml -n ${NAMESPACE}
+                            kubectl apply -f kubenates/${NAMESPACE}/frontend-service.yml -n ${NAMESPACE}
+                            kubectl apply -f kubenates/${NAMESPACE}/backend-deployment.yml -n ${NAMESPACE}
+                            kubectl apply -f kubenates/${NAMESPACE}/backend-service.yml -n ${NAMESPACE}
+                            kubectl apply -f kubenates/${NAMESPACE}/loadbalancer-service.yml -n ${NAMESPACE}
+                           """
                     }
                 }
             }
