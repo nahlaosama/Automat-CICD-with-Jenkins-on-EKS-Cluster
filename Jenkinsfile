@@ -28,7 +28,7 @@ pipeline {
                     
                     // Push the image to Docker Hub
                     sh 'docker push nahhla0220/nginx:v1'
-                    
+
                     // Remove the image after pushing
                     sh 'docker rmi nahhla0220/nginx:v1'
                 }
@@ -43,6 +43,7 @@ pipeline {
 
                        
                         // Apply the Kubernetes deployment and service YAML files
+<<<<<<< HEAD
                        sh """
                             kubectl apply -f kubenates/${NAMESPACE}/frontend-deployment.yml -n ${NAMESPACE}
                             kubectl apply -f kubenates/${NAMESPACE}/frontend-service.yml -n ${NAMESPACE}
@@ -50,6 +51,11 @@ pipeline {
                             kubectl apply -f kubenates/${NAMESPACE}/backend-service.yml -n ${NAMESPACE}
                             kubectl apply -f kubenates/${NAMESPACE}/loadbalancer-service.yml -n ${NAMESPACE}
                            """
+=======
+                        sh """
+                          kubectl get namespaces
+                        """
+>>>>>>> 56e0482bf85a15984f592e82c07933f7a4c14195
                     }
                 }
             }
