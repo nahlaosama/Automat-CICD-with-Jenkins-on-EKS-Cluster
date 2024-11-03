@@ -44,7 +44,7 @@ pipeline {
                        
                         // Apply the Kubernetes deployment and service YAML files
                         sh """
-                            cat kubenates/dev/frontend-deployment.yml'
+                            cat kubenates/dev/frontend-deployment.yml
                             kubectl apply -f kubenates/${NAMESPACE}/frontend-deployment.yml -n ${NAMESPACE}
                             kubectl apply -f kubenates/${NAMESPACE}/frontend-service.yml -n ${NAMESPACE}
                             kubectl apply -f kubenates/${NAMESPACE}/backend-deployment.yml -n ${NAMESPACE}
