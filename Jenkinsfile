@@ -1,12 +1,13 @@
 pipeline {
      
-    environment {
+     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub')
         IMAGE_NAME = 'nahhla0220/nginx'
+        AWS_ACCESS_KEY_ID = credentials('access-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('secret-access-key-id')
         KUBECONFIG = credentials('kubeconfig')
         NAMESPACE = "${env.BRANCH_NAME == 'prod' ? 'prod' : 'dev'}"
     }
-
   agent any
 
      stages {
@@ -47,7 +48,7 @@ pipeline {
                         kubectl apply -f kubenates/${NAMESPACE}/frontend-service.yml      -n ${NAMESPACE}
                         kubectl apply -f kubenates/${NAMESPACE}/backend-deployment.yml    -n ${NAMESPACE}
                         kubectl apply -f kubenates/${NAMESPACE}/backend-service.yml       -n ${NAMESPACE} 
-                        kubectl apply -f kubenates/${NAMESPACE}/loadbalancer-service.ym   -n ${NAMESPACE} 
+                        kubectl apply -f kubenates/${NAMESPACE}/loadbalancer-service.yml   -n ${NAMESPACE} 
                         """
                     }
                 }
