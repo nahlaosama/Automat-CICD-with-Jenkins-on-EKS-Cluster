@@ -6,19 +6,30 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('secret-access-key-id')
         KUBECONFIG = credentials('kubeconfig')
-        NAMESPACE = "${env.BRANCH_NAME == 'prod' ? 'prod' : 'dev'}"
+       
     }
 
   agent any
 
      stages {
+
+           stage('Preparation') {
+            steps {
+                script {
+                    // Set the NAMESPACE variable based on the branch name
+                    env.NAMESPACE = (env.BRANCH_NAME == 'prod') ? 'prod' : 'dev'
+                    echo "Deploying to namespace: ${env.NAMESPACE}" // Log the namespace for debugging
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
                     // Log in to Docker Hub using the credentials
                     sh "echo \$DOCKER_HUB_CREDENTIALS_PSW | docker login -u \$DOCKER_HUB_CREDENTIALS_USR --password-stdin"
                     // Build the Docker image
-                    sh 'docker build -t nahhla0220/nginx:v1 .'
+                    sh 'docker build -t ${IMAGE_NAME}:v1 .'
                 }
             }
         }
@@ -29,10 +40,10 @@ pipeline {
                 script {
                     
                     // Push the image to Docker Hub
-                    sh 'docker push nahhla0220/nginx:v1'
+                    sh 'docker push ${IMAGE_NAME}:v1'
                     
                     // Remove the image after pushing
-                    sh 'docker rmi nahhla0220/nginx:v1'
+                    sh 'docker rmi ${IMAGE_NAME}:v1'
                 }
             }
         }
