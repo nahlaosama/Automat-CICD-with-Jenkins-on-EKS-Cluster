@@ -4,7 +4,7 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub')
         IMAGE_NAME = 'nahhla0220/nginx'
         KUBECONFIG = credentials('kubeconfig')
-        NAMESPACE = "${env.BRANCH_NAME.trim() == 'prod' ? 'prod' : 'dev'}"
+        NAMESPACE = "${env.BRANCH_NAME== 'prod' ? 'prod' : 'dev'}"
     }
 
   agent any
