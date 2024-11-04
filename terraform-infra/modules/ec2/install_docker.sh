@@ -20,10 +20,11 @@ sudo apt-get update
 
 # Install AWS CLI 
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo apt install unzip
 unzip awscliv2.zip
 sudo ./aws/install
 
 #  Install and Configure kubectl
-curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/latest/bin/linux/amd64/kubectl
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.31.0/2024-09-12/bin/linux/amd64/kubectl
 chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
