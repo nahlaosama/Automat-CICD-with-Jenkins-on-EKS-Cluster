@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nahhla0220/nginx:v2
+          image: nahhla0220/nginx:v1
           ports:
             - containerPort: 80
 
