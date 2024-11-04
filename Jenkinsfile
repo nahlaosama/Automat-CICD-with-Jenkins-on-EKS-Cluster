@@ -6,22 +6,13 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('secret-access-key-id')
         KUBECONFIG = credentials('kubeconfig')
+        NAMESPACE = "${env.BRANCH_NAME == 'prod' ? 'prod' : 'dev'}"
        
     }
 
   agent any
 
      stages {
-
-           stage('Preparation') {
-            steps {
-                script {
-                    // Set the NAMESPACE variable based on the branch name
-                    env.NAMESPACE = (env.BRANCH_NAME == 'prod') ? 'prod' : 'dev'
-                    echo "Deploying to namespace: ${env.NAMESPACE}" // Log the namespace for debugging
-                }
-            }
-        }
 
         stage('Build') {
             steps {
